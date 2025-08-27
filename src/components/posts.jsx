@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getPost ,deletePost} from "../api/PostApi";
+import { Form } from "./form";
 
 export const Posts = () => {
     const [data, setData] = useState([]);
+    const [updateDataApi,setUpdateDataApi]=useState({});
     const getPostData = async () => {
         const res = await getPost();
         console.log(res.data);
@@ -29,7 +31,18 @@ export const Posts = () => {
             console.log(error);
         }
     }
+    //handle UpdatePost
+    const handleUpdatePost = (currElem)=> setUpdateDataApi(currElem);
     return (
+        <>
+        <section className="section-form">
+            <Form 
+            data={data} 
+            setData={setData} 
+            updateDataApi={updateDataApi} 
+            setUpdateDataApi={setUpdateDataApi}
+            />
+        </section>
         <section className="section-post">
             <ol>
             {data.map((currElem) => {
@@ -38,7 +51,7 @@ export const Posts = () => {
                     <li key={id}>
                         <p>Title: {title}</p>
                         <p>Body: {body}</p>
-                        <button className="btn-edit">Edit</button>
+                        <button onClick={()=> handleUpdatePost(currElem)}>Edit</button>
                         <button className="btn-delete" onClick={()=>handleDeletePost(id)}>Delete</button>
                     </li>
                 )
@@ -46,5 +59,6 @@ export const Posts = () => {
             </ol>
             
         </section>
-    )
+    </>
+    );
 }
